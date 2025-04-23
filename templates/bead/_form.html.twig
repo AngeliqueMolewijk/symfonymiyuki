@@ -1,0 +1,89 @@
+<section style="background-color: #eee;">
+	{{ form_start(beadForm) }}
+
+
+	<div class="container py-5">
+		<div class="row bg-lightown border border-secondary rounded m-3 p-2">
+			<div class="row">
+				<div class="col-4 ">
+					{% if bead|default(null) %}<img src="{{ asset('images/' ~ bead.image) }}" class="img-fluid p-3"/>
+					{% endif %}
+					<div class="mb-2">{{form_widget(beadForm.imageFile)}}</div>
+
+				</div>
+				<div class="col-8">
+					<div class="col">
+						<div class="row">
+							<div class="col-md-4">
+								<div class="mt-2 mb-2">{{ form_label(beadForm.name) }}</div>
+								<div class="mb-2">{{ form_label(beadForm.number) }}</div>
+								<div class="mb-2">{{ form_label(beadForm.stock) }}</div>
+							</div>
+							<div class="col-md-8">
+								<div class="mb-2">{{form_widget(beadForm.name)}}</div>
+								<div class="mb-2">{{form_widget(beadForm.number)}}</div>
+								<div class="mb-2">{{form_widget(beadForm.stock)}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-5">
+					<h2>Assign beads</h2>
+					{# {{dump(bead.components[0].id)}} #}
+					{% if beadForm.components is defined %}
+						{{ form_row(beadForm.components) }}
+					{% endif %}
+				</div>
+				<div class="col-6">
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover align-middle">
+							<thead class="table-light">
+								<tr>
+									<th scope="col">Colors:</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for pair in beadForm.colors|batch(4) %}
+									<tr>
+										{% for color in pair %}
+											{# <td>{{ color.vars.label }}</td> #}
+											<td class="text-center">{{ form_widget(color, {'attr': {'class': 'form-check-input'}}) }}</td>
+										{% endfor %}
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<button class="btn btn-primary">Save</button>
+
+
+		</div>
+		{{ form_end(beadForm) }}
+
+
+		<div class="row m-3 justify-content-md-center">
+			<div class="col-2">
+				{% if bead ?? false %}
+					<form method="POST" action="{{ path('app_bead_delete', { 'id': bead.id }) }}">
+						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ bead.id) }}">
+						<button class="btn btn-danger">Delete</button>
+					</form>
+
+				{% endif %}
+			</div>
+			<div class="col-2">
+
+				<a href="{{ path('app_bead_show',{'id': bead.id}) }}" class="btn btn-info">Show Bead</a>
+			</div>
+			<div class="col-2">
+
+				<a href="{{ path('homepage') }}" class="btn btn-primary">back to list</a>
+			</div>
+		</div>
+	</div>
+
+</div></section>

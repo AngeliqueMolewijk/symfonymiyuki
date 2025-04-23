@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Bead
+{% endblock %}
+
+{% block body %}
+	<h1>Create new Bead</h1>
+
+	{{ include('bead/_form.html.twig', {'title': 'New bead'}) }}
+
+{% endblock %}

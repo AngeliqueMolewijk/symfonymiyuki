@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bead index
+{% endblock %}
+
+{% block body %}
+	<h1>Bead index</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Image</th>
+				<th>Id</th>
+				<th>Number</th>
+				<th>Name</th>
+				<th>Stock</th>
+				<th>Userid</th>
+				<th>Colors</th>
+				{# <th>Slug</th> #}
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for bead in beads %}
+				<tr>
+					<td>
+						<img src="{{ asset('images/' ~ bead.image) }}" width="100px" class="img-fluid p-3"/>
+					</td>
+					<td>{{ bead.id }}</td>
+					<td>{{ bead.number }}</td>
+					<td>{{ bead.name }}</td>
+					<td>{{(bead.stock /100) |number_format(2, '.', ',') }}</td>
+					<td>{{ bead.userid }}</td>
+					<td>
+						{% for color in bead.colors %}
+							{{color.color}}
+
+						{% endfor %}
+					</td>
+					<td>
+						<a href="{{ path('app_bead_show', {'id': bead.id}) }}">show</a>
+						<a href="{{ path('app_bead_edit', {'id': bead.id}) }}">edit</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="10">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_bead_new') }}">Create new</a>
+{% endblock %}

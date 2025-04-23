@@ -1,0 +1,9 @@
+.bg-lightown {
+    background-color: white;
+    border-color:rgba(0, 0, 0, 0.175) !important;
+}
+
+.color-height{
+    height: 100px;
+    width: 100px;
+}
