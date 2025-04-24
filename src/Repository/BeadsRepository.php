@@ -37,10 +37,4 @@ class BeadsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
-    // public function addBeadToMix(Bead $bead,)
-    // {
-
-    //     return $bead->getUsedInMixes();
-    // }
 }

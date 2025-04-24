@@ -8,7 +8,6 @@ use App\Form\CategoryType;
 use App\Form\ProjectType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProjectRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -131,5 +130,15 @@ final class ProjectController extends AbstractController
             'project' => $project,
             'projectForm' => $projectForm,
         ]);
+    }
+
+    #[Route('Project/{id}/delete', name: 'app_project_delete', methods: ['POST'])]
+    public function testdel(Request $request, Project $project, EntityManagerInterface $em): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $project->getId(), $request->getPayload()->getString('_token'))) {
+            $em->remove($project);
+            $em->flush();
+        }
+        return $this->redirect($this->generateUrl('app_project'));
     }
 }

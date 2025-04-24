@@ -29,13 +29,16 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-5">
-					<h2>Assign beads</h2>
-					{# {{dump(bead.components[0].id)}} #}
-					{% if beadForm.components is defined %}
+				{% if beadForm.components is defined %}
+
+					<div class="col-5">
+						<h2>Assign beads</h2>
+
 						{{ form_row(beadForm.components) }}
-					{% endif %}
-				</div>
+					</div>
+				{% endif %}
+
+
 				<div class="col-6">
 					<div class="table-responsive">
 						<table class="table table-bordered table-hover align-middle">
@@ -66,20 +69,24 @@
 
 
 		<div class="row m-3 justify-content-md-center">
-			<div class="col-2">
-				{% if bead ?? false %}
-					<form method="POST" action="{{ path('app_bead_delete', { 'id': bead.id }) }}">
-						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ bead.id) }}">
-						<button class="btn btn-danger">Delete</button>
-					</form>
+			{% if bead ?? false %}
 
-				{% endif %}
-			</div>
-			<div class="col-2">
+				<div class="col-2">
+<form method="POST" action="{{ path('app_bead_delete', { 'id': bead.id }) }}">
+	<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ bead.id) }}">
+	<button class="btn btn-danger">Delete</button>
+</form>
 
-				<a href="{{ path('app_bead_show',{'id': bead.id}) }}" class="btn btn-info">Show Bead</a>
-			</div>
-			<div class="col-2">
+
+				</div>
+				<div class="col-2">
+
+					<a href="{{ path('app_bead_show',{'id': bead.id}) }}" class="btn btn-info">Show Bead</a>
+				</div>
+			{% endif %}
+
+
+			<div class="col-5">
 
 				<a href="{{ path('homepage') }}" class="btn btn-primary">back to list</a>
 			</div>

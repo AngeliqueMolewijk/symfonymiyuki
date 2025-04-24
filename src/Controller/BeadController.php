@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Bead;
 use App\Form\BeadToMixType;
 use App\Form\BeadType;
-use App\Form\RelatedBeadsType;
 use App\Repository\BeadsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 // use Doctrine\ORM\EntityManager;
@@ -44,7 +43,7 @@ final class BeadController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_bead_new', methods: ['GET', 'POST'])]
+    #[Route('/newbead', name: 'app_bead_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

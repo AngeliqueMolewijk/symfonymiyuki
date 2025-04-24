@@ -11,52 +11,40 @@
 				<button class="btn btn-outline-success">In Stock</button>
 			</a>
 
-			<form class="d-flex" action="{{ path('homepage') }}">
-				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{app.request.query.get('q') }}">
-				<button class="btn btn-outline-success" type="submit">Search</button>
-			</form>
-		</div>
-	</div>
-	{% for pair in beads|batch(4) %}
-		<div class="row row-cols-auto">
-			{% for bead in pair %}
-				<div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-3">
-					<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: bead.id }) }}" style="text-decoration:none;">
-						<div class="card">
-							<div class="card-header">
-<img src="{{ asset('images/' ~ bead.image)}}" class="card-img-top" alt="...">
 
-								<div class="card-body">
+<form class="d-flex" action="{{ path('homepage') }}">
+	<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{app.request.query.get('q') }}">
+	<button class="btn btn-outline-success" type="submit">Search</button>
+</form></div></div>{% for pair in beads|batch(4) %}<div class="row row-cols-auto">
+{% for bead in pair %}
+	<div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-3">
+		<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: bead.id }) }}" style="text-decoration:none;">
+			<div class="card">
+				<div class="card-header">
+					<img src="{{ asset('images/' ~ bead.image)}}" class="card-img-top" alt="...">
 
-									<h5 class="card-title">{{ bead.name }}</h5>
-									<ul class="list-group list-group-flush">
-										<li class="list-group-item">Number:
-											{{bead.number}}</li>
-										<li class="list-group-item">Stock in gram:
-											{{bead.stock / 100}}</li>
 
-										<li class="list-group-item">Amount: &#177;
+<div class="card-body">
 
-											{{bead.stock * 2}}
-											beads
-										</li>
-										{% if bead.components | length > 0 %}
-											<li class="list-group-item">Beads in mix:
-												{{bead.getcomponents| length}}</li>
-										{% endif %}
-										{% if is_granted('ROLE_ADMIN') %}
-											<li class="list-group-item">User:
-												{{puzzel.User.getName }}</li>
-											{% else %}
-										{% endif %}
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</a>
-			</div>
-		{% endfor %}
-	</div>
+
+<h5 class="card-title">{{ bead.name }}</h5>
+<ul class="list-group list-group-flush">
+	<li class="list-group-item">Number:
+		{{bead.number}}</li>
+	<li class="list-group-item">Stock in gram:
+		{{bead.stock / 100}}</li>
+
+
+<li class="list-group-item">Amount: &#177;</li>
+
+
+{{bead.stock * 2}}
+beads</li>{% if bead.components | length > 0 %}
+<li class="list-group-item">Beads in mix:
+	{{bead.getcomponents| length}}</li>{% endif %}{% if is_granted('ROLE_ADMIN') %}
+<li class="list-group-item">User:
+	{{puzzel.User.getName }}</li>
+{% else %}{% endif %}</li></ul></div></div></div></a></div>{% endfor %} </div>
+
 {% endfor %}</div></main>{% endblock %}
 

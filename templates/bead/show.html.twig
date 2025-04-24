@@ -109,12 +109,13 @@
 				</div>
 				<div class="row">
 					{% for mix in bead.components %}
-						<div class="col">
+						<div class="col-auto">
 							<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: mix.id }) }}" style="text-decoration:none;">
 								<div class="card" style="width: 14rem;">
 									<div class="card-header">
 										<img src="{{ asset('images/' ~ mix.image)}}" class="card-img-top" alt="...">
 										<div class="card-body">
+
 
 											<h5 class="card-title">{{ mix.name }}</h5>
 											<ul class="list-group list-group-flush">
@@ -122,6 +123,7 @@
 													{{mix.number}}</li>
 												<li class="list-group-item">Stock in gram:
 													{{mix.stock / 100}}</li>
+
 
 												<li class="list-group-item">Amount: &#177;
 													{{mix.stock * 2}}
@@ -134,7 +136,6 @@
 							</a>
 						</div>
 					{% endfor %}
-
 				</div>
 			{% endif %}
 			<script>

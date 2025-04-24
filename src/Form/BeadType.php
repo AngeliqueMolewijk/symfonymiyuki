@@ -11,8 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Form\DataTransformer\StockToHunderdTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\ColorType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 
 class BeadType extends AbstractType
 {
@@ -42,26 +41,13 @@ class BeadType extends AbstractType
                 'expanded' => true,
                 'by_reference' => false,
                 'attr' => ['class' => 'm-2'],
-            ])
-            // ->add('components', EntityType::class, [
-            //     'class' => Bead::class,
-            //     'choice_label' => 'name',
-            //     'multiple' => true,
-            //     'expanded' => false, // change to false for a select box
-            //     'required' => false,
-            //     'by_reference' => false, // Important for correct add/remove behavior
-            //     'label' => 'Components ',
-            //     'attr' => ['class' => 'select2'], // this is the key part
+        ])
 
-            // ])
-            // ->add('image')
             ->add('imageFile', FileType::class, ['required' => false, 'mapped' => false])
-            // ->add('save', SubmitType::class, ['label' => 'Create Bead'])
 
         ;
         $data = $options['data'];
-        // dd($data);
-        $nameValue = $data?->getName(); // or $data['name'] if it's an array
+        $nameValue = $data?->getName();
 
         if ($nameValue && stripos($nameValue, 'mix') !== false) {
             $builder->add('components', EntityType::class, [
@@ -69,9 +55,9 @@ class BeadType extends AbstractType
                 'choice_label' => 'name',
                 'multiple' => true,
                 'expanded' => false, // change to false for a select box
-                'by_reference' => false, // Important for correct add/remove behavior
+                'by_reference' => false,
                 'required' => false,
-                'attr' => ['class' => 'select2'], // this is the key part
+                'attr' => ['class' => 'select2'],
             ]);
         }
         $builder->get('stock')
