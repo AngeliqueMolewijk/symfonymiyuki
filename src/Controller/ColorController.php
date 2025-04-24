@@ -23,8 +23,6 @@ final class ColorController extends AbstractController
     #[route('/beadscolor/{id}', name: 'beadscolor', methods: ['GET'])]
     public function showBeadColor(Color $color)
     {
-
-
         return $this->render('color/show.html.twig', [
             'color' => $color,
         ]);

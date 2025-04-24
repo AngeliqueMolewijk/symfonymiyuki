@@ -12,7 +12,7 @@
     "doctrine/doctrine-bundle": "^2.14",
     "doctrine/doctrine-migrations-bundle": "^3.4.1",
     "doctrine/orm": "^3.3.2",
-    "pagerfanta/doctrine-orm-adapter": "^4.7",
+    "pagerfanta/doctrine-orm-adapter": "^4.7.1",
     "stof/doctrine-extensions-bundle": "^1.13",
     "symfony/asset": "7.2.*",
     "symfony/asset-mapper": "7.2.*",

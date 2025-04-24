@@ -13,18 +13,12 @@
 				</div>
 				<div class="col-4">
 					<h2>Assign beads</h2>
-
-					{# {{dump(bead.components[0].id)}} #}
 					{{ form_start(beadToMixForm)}}
 					{% if beadToMixForm.components is defined %}
 						{{ form_row(beadToMixForm.components) }}
 					{% endif %}
-
 					<button class="btn btn-primary">Save</button>
-
 					{{ form_end(beadToMixForm) }}
-
-
 				</div>
 				<div class="col">
 					<div class="card-body">
@@ -49,7 +43,6 @@
 								<span>Colors</span>
 								{% for color in bead.colors %}
 									{{color.color}}
-
 								{% endfor %}
 							</div>
 							{% if bead.components|length > 0 %}
@@ -66,48 +59,47 @@
 							</form>
 							<a href="{{ path('homepage') }}" class="btn btn-primary">back to list</a>
 							<a href="{{ path('app_bead_edit', {'id': bead.id}) }}" class="btn btn-primary">edit</a>
-
 						</div>
 					</div>
 				</div>
-
 			</div>
-
-
 			<div id="form-status"></div>
 			{% if bead.usedInMixes|length > 0 %}
 				<div class="mx-auto mb-3" style="width: 400px;">
-					<h3>{{bead.usedInMixes|length }}
-						mix for this bead:
+					<h3>This beads in
+						{{bead.usedInMixes|length }}
+						mix(es)
 					</h3>
 				</div>
-				{% for inmixes in bead.usedInMixes %}
-					<div class="">
+				<div class="row">
 
-						<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: inmixes.id }) }}" style="text-decoration:none;">
-							<div class="card" style="width: 16rem;">
-								<div class="card-header">
-									<img src="{{ asset('images/' ~ inmixes.image)}}" class="card-img-top" alt="...">
-									<div class="card-body">
+					{% for inmixes in bead.usedInMixes %}
+						<div class="col">
+							<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: inmixes.id }) }}" style="text-decoration:none;">
+								<div class="card" style="width: 16rem;">
+									<div class="card-header">
+										<img src="{{ asset('images/' ~ inmixes.image)}}" class="card-img-top" alt="...">
+										<div class="card-body">
 
-										<h5 class="card-title">{{ inmixes.name }}</h5>
-										<ul class="list-group list-group-flush">
-											<li class="list-group-item">Number:
-												{{inmixes.number}}</li>
-											<li class="list-group-item">Stock in gram:
-												{{inmixes.stock / 100}}</li>
+											<h5 class="card-title">{{ inmixes.name }}</h5>
+											<ul class="list-group list-group-flush">
+												<li class="list-group-item">Number:
+													{{inmixes.number}}</li>
+												<li class="list-group-item">Stock in gram:
+													{{inmixes.stock / 100}}</li>
 
-											<li class="list-group-item">Amount: &#177;
-												{{inmixes.stock * 2}}
-												beads
-											</li>
-										</ul>
+												<li class="list-group-item">Amount: &#177;
+													{{inmixes.stock * 2}}
+													beads
+												</li>
+											</ul>
+										</div>
 									</div>
 								</div>
-							</div>
-						</a>
-					</div>
-				{% endfor %}
+							</a>
+						</div>
+					{% endfor %}
+				</div>
 			{% endif %}
 			{% if bead.components|length > 0 %}
 				<div class="mx-auto mb-3" style="width: 400px;">
@@ -115,9 +107,9 @@
 						Beads in this mix:
 					</h3>
 				</div>
-				<div class="row row-cols-auto">
+				<div class="row">
 					{% for mix in bead.components %}
-						<div class="">
+						<div class="col">
 							<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: mix.id }) }}" style="text-decoration:none;">
 								<div class="card" style="width: 14rem;">
 									<div class="card-header">
@@ -142,14 +134,14 @@
 							</a>
 						</div>
 					{% endfor %}
+
 				</div>
-			</div>
-		{% endif %}
-		<script>
-			document.addEventListener('DOMContentLoaded', function () {
+			{% endif %}
+			<script>
+				document.addEventListener('DOMContentLoaded', function () {
+
 $('.select2').select2({placeholder: "Choose an option", allowClear: true});
 });
-		</script>
-
-	</section>
-{% endblock %}
+			</script>
+		</section>
+	{% endblock %}

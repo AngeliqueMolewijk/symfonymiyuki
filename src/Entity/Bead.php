@@ -56,11 +56,18 @@ class Bead
 
     private Collection $usedInMixes;
 
+    /**
+     * @var Collection<int, Project>
+     */
+    #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'bead')]
+    private Collection $projects;
+
     public function __construct()
     {
         $this->colors = new ArrayCollection();
         $this->components = new ArrayCollection();
         $this->usedInMixes = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
     public function __toString()
@@ -226,5 +233,32 @@ class Bead
     public function getUsedInMixes(): Collection
     {
         return $this->usedInMixes;
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): static
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects->add($project);
+            $project->addBead($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): static
+    {
+        if ($this->projects->removeElement($project)) {
+            $project->removeBead($this);
+        }
+
+        return $this;
     }
 }
