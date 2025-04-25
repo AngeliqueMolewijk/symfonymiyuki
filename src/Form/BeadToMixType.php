@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Bead;
-use App\Entity\Color;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,10 +20,10 @@ class BeadToMixType extends AbstractType
                 'class' => Bead::class,
                 'choice_label' => 'name',
                 'multiple' => true,
-                'expanded' => false, // change to false for a select box
+                'expanded' => false,
                 'by_reference' => false, // Important for correct add/remove behavior
                 'required' => false,
-                'attr' => ['class' => 'select2'], // this is the key part
+                'attr' => ['class' => 'select2'],
             ]);
         }
     }

@@ -74,7 +74,9 @@
 				<div class="row">
 
 					{% for inmixes in bead.usedInMixes %}
-						<div class="col">
+<div class="col-auto">
+
+
 							<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: inmixes.id }) }}" style="text-decoration:none;">
 								<div class="card" style="width: 16rem;">
 									<div class="card-header">

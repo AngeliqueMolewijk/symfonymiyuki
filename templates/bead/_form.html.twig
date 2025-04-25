@@ -51,7 +51,9 @@
 								{% for pair in beadForm.colors|batch(4) %}
 									<tr>
 										{% for color in pair %}
-											{# <td>{{ color.vars.label }}</td> #}
+{# Displaying the color options in the table #}
+
+
 											<td class="text-center">{{ form_widget(color, {'attr': {'class': 'form-check-input'}}) }}</td>
 										{% endfor %}
 									</tr>
@@ -76,6 +78,7 @@
 	<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ bead.id) }}">
 	<button class="btn btn-danger">Delete</button>
 </form>
+
 
 
 				</div>

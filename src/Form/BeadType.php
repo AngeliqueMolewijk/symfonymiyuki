@@ -23,8 +23,7 @@ class BeadType extends AbstractType
             ->add(
                 'stock',
                 NumberType::class,
-                array(
-                    // 'divisor' => 100,
+            array(
                     'scale' => 2,
                     'html5' => true,
                     'attr'     => array(
@@ -54,7 +53,7 @@ class BeadType extends AbstractType
                 'class' => Bead::class,
                 'choice_label' => 'name',
                 'multiple' => true,
-                'expanded' => false, // change to false for a select box
+                'expanded' => false,
                 'by_reference' => false,
                 'required' => false,
                 'attr' => ['class' => 'select2'],

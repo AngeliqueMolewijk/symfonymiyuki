@@ -10,6 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class ColorController extends AbstractController
 {
+
     #[Route('/color', name: 'app_color')]
     public function index(ColorRepository $colorRepository): Response
     {

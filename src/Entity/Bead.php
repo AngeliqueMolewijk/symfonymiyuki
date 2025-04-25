@@ -6,7 +6,6 @@ use App\Repository\BeadsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation\Slug;
 use Gedmo\Mapping\Annotation\Timestampable;
 
 #[ORM\Entity(repositoryClass: BeadsRepository::class)]
@@ -211,7 +210,6 @@ class Bead
 
     public function setComponents(iterable $components): self
     {
-        // dd("in setcomponents");
 
         $this->components = new ArrayCollection();
         foreach ($components as $component) {
@@ -222,10 +220,8 @@ class Bead
 
     public function removeComponent(self $bead): self
     {
-        // if ($this->components->removeElement($bead)) {
         $this->components->removeElement($bead);
         $bead->usedInMixes->removeElement($this);
-        // }
         return $this;
     }
 

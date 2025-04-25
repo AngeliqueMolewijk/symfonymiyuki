@@ -12,17 +12,13 @@ class StockToHunderdTransformer implements DataTransformerInterface
 {
 
     /**
-     * Transforms cent to dollar amount.
+     * Transforms stock amount to whole number.
      *
      * @param  int|null $value
      * @return double
      */
     public function Transform(mixed $value): string
     {
-        // dd($value);
-        // if (null === $value) {
-        //     return;
-        // }
 
         $priceInDollar = number_format(($value / 100), 2, '.', ' ');
 
@@ -31,9 +27,6 @@ class StockToHunderdTransformer implements DataTransformerInterface
 
     public function reverseTransform(mixed $value): string
     {
-        // if (null === $value) {
-        //     return;
-        // }
 
         $priceInCent = (int)($value * 100);
 

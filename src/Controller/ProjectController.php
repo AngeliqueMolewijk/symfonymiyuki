@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class ProjectController extends AbstractController
 {
+    // Displays all projects on the project index page
 
     #[Route('/project', name: 'app_project', methods: ['GET'])]
     public function index(ProjectRepository $projectRepository): Response
@@ -25,6 +26,7 @@ final class ProjectController extends AbstractController
             'projects' => $projects,
         ]);
     }
+    // Handles displaying and submitting the form for creating a new category
 
     #[Route('/category', name: 'app_category', methods: ['GET', 'POST'])]
     public function category(Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $em): Response
@@ -47,6 +49,7 @@ final class ProjectController extends AbstractController
             'categoryForm' => $categoryForm,
         ]);
     }
+    // Edits an existing category by its ID
 
     #[Route('/category{id}/edit', name: 'app_category_edit', methods: ['GET', 'POST'])]
     public function categoryedit(Category $category, Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $em): Response
@@ -69,6 +72,7 @@ final class ProjectController extends AbstractController
         ]);
     }
 
+    // Creates a new project with optional image upload
 
     #[Route('/newproject', name: 'app_project_new', methods: ['GET', 'POST'])]
     public function newproject(Request $request, EntityManagerInterface $em): Response
@@ -102,6 +106,10 @@ final class ProjectController extends AbstractController
             'projectForm' => $projectForm,
         ]);
     }
+    /*
+     Edits an existing project and optionally replaces its image
+    TODO seperate the uploadFile in a ImageUploaderService 
+    */
 
     #[Route('project/{id}/edit', name: 'app_project_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Project $project, EntityManagerInterface $em): Response
@@ -131,6 +139,7 @@ final class ProjectController extends AbstractController
             'projectForm' => $projectForm,
         ]);
     }
+    // Deletes a project by ID (with CSRF token protection)
 
     #[Route('Project/{id}/delete', name: 'app_project_delete', methods: ['POST'])]
     public function testdel(Request $request, Project $project, EntityManagerInterface $em): Response
