@@ -8,13 +8,14 @@
 	<div class="container">
 		<div class="row">
 			{% for color in colors %}
-				<div class="col">
+				<div class="col-auto">
 					<div class="card mb-2" style="width: 10rem;">
 						<img src="{{ asset('colors/' ~ color.hexa)}}" class="card-img-top" alt="...">
 
 						<div class="card-body">
 							<h5 class="card-title">{{color.color}}</h5>
-							<a href="{{ path('beadscolor', { id: color.id }) }}" class="btn btn-primary">Show Beads</a>
+							<a href="{{ path('app_color_show', { id: color.id }) }}" class="btn btn-primary">Show Beads</a>
+
 
 							<div class"">beads:
 								{{color.bead|length}}

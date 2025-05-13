@@ -8,18 +8,25 @@
 	<section style="background-color: #eee;">
 		<div class="container py-5">
 			<div class="row bg-lightown border border-secondary rounded m-3 p-2">
-				<div class="col-4 ">
+				<div class="col-md-2 ">
 					<img src="{{ asset('images/' ~ bead.image) }}" class="img-fluid p-3"/>
 				</div>
-				<div class="col-4">
-					<h2>Assign beads</h2>
-					{{ form_start(beadToMixForm)}}
-					{% if beadToMixForm.components is defined %}
-						{{ form_row(beadToMixForm.components) }}
-					{% endif %}
-					<button class="btn btn-primary">Save</button>
-					{{ form_end(beadToMixForm) }}
-				</div>
+
+				{% if is_granted('ROLE_ADMIN') %}
+					<div class="col">
+						{% if beadToMixForm.components is defined %}
+							{{ form_start(beadToMixForm)}}
+							<h2>Assign beads</h2>
+
+							{{ form_row(beadToMixForm.components) }}
+							<button class="btn btn-primary">Save asigned bead</button>
+							{{ form_end(beadToMixForm) }}
+
+						{% endif %}
+					</div>
+				{% endif %}
+
+
 				<div class="col">
 					<div class="card-body">
 						<div class="text-center">
@@ -30,15 +37,7 @@
 								<span>Number</span>
 								<span>{{ bead.number }}</span>
 							</div>
-							<div class="d-flex justify-content-between border-bottom">
-								<span>Stock</span>
-								<span>{{bead.stock / 100}}
-									gram</span>
-							</div>
-							<div class="d-flex justify-content-between border-bottom">
-								<span>Amount</span>
-								<span>{{bead.stock * 2}}</span>
-							</div>
+
 							<div class="d-flex justify-content-between border-bottom">
 								<span>Colors</span>
 								{% for color in bead.colors %}
@@ -51,49 +50,109 @@
 									<span>{{bead.components|length}}</span>
 								</div>
 							{% endif %}
+							{# {% if bead.u|length > 0 %} #}
+							<div class="d-flex justify-content-between border-bottom">
+								<span>in mix:</span>
+								{% for mix in bead.UsedInMixes %}
+									{{mix.name}}
+								{% endfor %}
+							</div>
 						</div>
-						<div class="d-flex justify-content-between total font-weight-bold mt-4">
-							<form method="POST" action="{{ path('app_bead_delete', { 'id': bead.id }) }}">
-								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ bead.id) }}">
-								<button class="btn btn-danger">Delete</button>
-							</form>
-							<a href="{{ path('homepage') }}" class="btn btn-primary">back to list</a>
-							<a href="{{ path('app_bead_edit', {'id': bead.id}) }}" class="btn btn-primary">edit</a>
+						{% set userFound = false %}
+						{% for userBead in bead.userBeads %}
+							{% if userBead.user == app.user %}
+								{% set userFound = true %}
+								<div class="d-flex justify-content-between border-bottom">
+									<span>Stock:</span>
+									<span>{{userBead.stock /100}}
+										gram</span>
+								</div>
+								<div class="d-flex justify-content-between border-bottom">
+									<span>Amount</span>
+									<span>{{userBead.stock * 2}}
+										beads</span>
+								</div>
+							{% endif %}
+						{% endfor %}
+
+						{% if userFound %}
+							<p class='text-success fw-bold'>In my collection</p>
+							<div class="mt-2">
+								<a href="{{ path('app_userbead_remove', {'id': bead.id}) }}" class="btn btn-danger">remove from collection</a>
+							</div>
+
+						{% else %}
+							<p class='text-danger fw-bold'>Not in my collection</p>
+							<div class="mt-2">
+								<a href="{{ path('app_userbead_add', {'id': bead.id}) }}" class="btn btn-success">Add to my collection</a>
+							</div>
+						{% endif %}
+						<div class="my-2 d-flex gap-2">
+							{% if is_granted('ROLE_ADMIN') %}
+								<form method="POST" action="{{ path('app_bead_delete', {'id': bead.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ bead.id) }}">
+									<button class="btn btn-danger btn-sm">Delete</button>
+								</form>
+							{% endif %}
+
+							<a href="{{ path('app_bead_homepage') }}" class="btn btn-primary btn-sm">Back to list</a>
+							{% if is_granted('ROLE_ADMIN') %}
+								<a href="{{ path('app_bead_edit', {'id': bead.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+							{% else %}
+								<a href="{{ path('app_userbead_editstock', {'id': bead.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+							{% endif %}
 						</div>
 					</div>
 				</div>
 			</div>
 			<div id="form-status"></div>
-			{% if bead.usedInMixes|length > 0 %}
+
+			{% if bead.UsedInMixes|length > 0 %}
 				<div class="mx-auto mb-3" style="width: 400px;">
-					<h3>This beads in
-						{{bead.usedInMixes|length }}
-						mix(es)
+					<h3>{{bead.UsedInMixes|length }}
+						mix(es):
 					</h3>
 				</div>
 				<div class="row">
-
-					{% for inmixes in bead.usedInMixes %}
-<div class="col-auto">
-
-
-							<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: inmixes.id }) }}" style="text-decoration:none;">
-								<div class="card" style="width: 16rem;">
+					{% for mix in bead.UsedInMixes %}
+						<div class="col-auto">
+							<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: mix.id }) }}" style="text-decoration:none;">
+								<div class="card" style="width: 14rem;">
 									<div class="card-header">
-										<img src="{{ asset('images/' ~ inmixes.image)}}" class="card-img-top" alt="...">
+										<img src="{{ asset('images/' ~ mix.image)}}" class="card-img-top" alt="...">
 										<div class="card-body">
 
-											<h5 class="card-title">{{ inmixes.name }}</h5>
+
+											<h5 class="card-title">{{ mix.name }}</h5>
 											<ul class="list-group list-group-flush">
 												<li class="list-group-item">Number:
-													{{inmixes.number}}</li>
-												<li class="list-group-item">Stock in gram:
-													{{inmixes.stock / 100}}</li>
+													{{mix.number}}</li>
+												<li class="list-group-item">in Collection:
+													{% set userFound = false %}
+													{% for userBead in mix.userBeads %}
+														{# {{userBead.name}} #}
 
-												<li class="list-group-item">Amount: &#177;
-													{{inmixes.stock * 2}}
-													beads
+														{% if userBead.user == app.user %}
+															{% set userFound = true %}
+														{% endif %}
+													{% endfor %}
+
+													{% if userFound %}
+														<p class='text-success fw-bold'>In my collection</p>
+														{# <div class="mt-2">
+																																																																																																																																																																																																																																																																																																							<a href="{{ path('app_userbead_remove', {'id': bead.id}) }}" class="btn btn-danger">remove from collection</a>
+																																																																																																																																																																																																																																																																																																						</div> #}
+													{% else %}
+														<p class='text-danger fw-bold'>Not in my collection</p>
+														{# <div class="mt-2">
+																																																																																																																																																																																																																																																																																																							<a href="{{ path('app_userbead_add', {'id': bead.id}) }}" class="btn btn-success">Add to my collection</a>
+																																																																																																																																																																																																																																																																																																						</div> #}
+
+
+													{% endif %}
 												</li>
+
+
 											</ul>
 										</div>
 									</div>
@@ -117,20 +176,35 @@
 									<div class="card-header">
 										<img src="{{ asset('images/' ~ mix.image)}}" class="card-img-top" alt="...">
 										<div class="card-body">
-
-
 											<h5 class="card-title">{{ mix.name }}</h5>
 											<ul class="list-group list-group-flush">
 												<li class="list-group-item">Number:
 													{{mix.number}}</li>
-												<li class="list-group-item">Stock in gram:
-													{{mix.stock / 100}}</li>
+												<li class="list-group-item">in Collection:
+													{% set userFound = false %}
+													{% for userBead in mix.userBeads %}
+														{# {{userBead.name}} #}
+
+														{% if userBead.user == app.user %}
+															{% set userFound = true %}
+														{% endif %}
+													{% endfor %}
+
+													{% if userFound %}
+														<p class='text-success fw-bold'>In my collection</p>
+														{# <div class="mt-2">
+																																																																																																																																																																																																																																																																																																							<a href="{{ path('app_userbead_remove', {'id': bead.id}) }}" class="btn btn-danger">remove from collection</a>
+																																																																																																																																																																																																																																																																																																						</div> #}
+													{% else %}
+														<p class='text-danger fw-bold'>Not in my collection</p>
+														{# <div class="mt-2">
+																																																																																																																																																																																																																																																																																																							<a href="{{ path('app_userbead_add', {'id': bead.id}) }}" class="btn btn-success">Add to my collection</a>
+																																																																																																																																																																																																																																																																																																						</div> #}
 
 
-												<li class="list-group-item">Amount: &#177;
-													{{mix.stock * 2}}
-													beads
+													{% endif %}
 												</li>
+
 											</ul>
 										</div>
 									</div>
@@ -140,11 +214,51 @@
 					{% endfor %}
 				</div>
 			{% endif %}
-			<script>
-				document.addEventListener('DOMContentLoaded', function () {
+			{% if bead.getProjects|length > 0 %}
 
+				<div class="mx-auto mt-3" style="width: 400px;">
+					<h3>This beads in
+						{{bead.getProjects|length }}
+						project(s)
+
+					</h3>
+				</div>
+				<div class="row">
+					{% for projects in bead.getProjects %}
+						<div class="col-auto">
+
+							<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: projects.id }) }}" style="text-decoration:none;">
+
+								<div class="card" style="width: 16rem;">
+									<div class="card-header">
+										<img src="{{ asset('images/' ~ projects.image)}}" class="card-img-top" alt="...">
+
+										<div class="card-body">
+
+											<h5 class="card-title">{{ projects.name }}</h5>
+
+											<ul class="list-group list-group-flush">
+												<li class="list-group-item">Number:
+													{{projects.description}}</li>
+
+											</ul>
+										</div>
+									</div>
+								</div>
+							</a>
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+			<!-- JavaScript to handle the confirmation for the delete button -->
+
+			<script>
+				document.addEventListener('DOMContentLoaded', function () { // Initialize Select2 if you need it for other elements on
 $('.select2').select2({placeholder: "Choose an option", allowClear: true});
+
 });
 			</script>
+
+
 		</section>
 	{% endblock %}

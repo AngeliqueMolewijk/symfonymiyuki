@@ -4,35 +4,29 @@ namespace App\Form;
 
 use App\Entity\Bead;
 use App\Entity\Color;
+use App\Entity\UserBead;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Form\DataTransformer\StockToHunderdTransformer;
+use Doctrine\DBAL\Types\IntegerType;
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class BeadType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // dd($options);
+        $userBead = $options['user_bead'];
         $builder
             ->add('number')
             ->add('name')
-            ->add(
-                'stock',
-                NumberType::class,
-            array(
-                    'scale' => 2,
-                    'html5' => true,
-                    'attr'     => array(
-                        'min'  => 0,
-                        'max'  => 9999.99,
-                        'step' => 0.01,
-                    ),
-                )
-            )
+
             ->add('colors', EntityType::class, [
                 'class' => Color::class,
                 'choice_label' => 'color',
@@ -40,11 +34,16 @@ class BeadType extends AbstractType
                 'expanded' => true,
                 'by_reference' => false,
                 'attr' => ['class' => 'm-2'],
-        ])
+            ]);
+        if ($options['show_stock']) {
 
-            ->add('imageFile', FileType::class, ['required' => false, 'mapped' => false])
-
-        ;
+            $builder->add('userBead', UserBeadType::class, [
+                'data' => $options['user_bead'],
+                'mapped' => false, // Important!
+                'label' => false,
+            ]);
+        }
+        $builder->add('imageFile', FileType::class, ['required' => false, 'mapped' => false]);
         $data = $options['data'];
         $nameValue = $data?->getName();
 
@@ -59,8 +58,6 @@ class BeadType extends AbstractType
                 'attr' => ['class' => 'select2'],
             ]);
         }
-        $builder->get('stock')
-            ->addModelTransformer(new StockToHunderdTransformer());
     }
 
 
@@ -68,6 +65,8 @@ class BeadType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Bead::class,
+            'user_bead' => null, // We inject this manually
+            'show_stock' => false,
         ]);
     }
 }

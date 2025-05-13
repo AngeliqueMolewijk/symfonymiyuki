@@ -8,10 +8,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/color', name: 'app_color_')]
+
 final class ColorController extends AbstractController
 {
 
-    #[Route('/color', name: 'app_color')]
+    #[Route('', name: 'index')]
     public function index(ColorRepository $colorRepository): Response
     {
         $colors = $colorRepository->findAll();
@@ -21,8 +23,8 @@ final class ColorController extends AbstractController
     }
 
 
-    #[route('/beadscolor/{id}', name: 'beadscolor', methods: ['GET'])]
-    public function showBeadColor(Color $color)
+    #[route('/{id}/show', name: 'show', methods: ['GET'])]
+    public function showBeadColor(Color $color): Response
     {
         return $this->render('color/show.html.twig', [
             'color' => $color,
