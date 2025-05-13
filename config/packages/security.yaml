@@ -20,10 +20,12 @@ security:
         login_path: app_login
         check_path: app_login
         enable_csrf: true
+        default_target_path: app_bead_homepage
+
       logout:
         path: app_logout
         # where to redirect after logout
-        target: homepage
+        target: app_bead_homepage
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#the-firewall
@@ -37,11 +39,13 @@ security:
     # but, definitely allow /login to be accessible anonymously
     - { path: ^/login, roles: PUBLIC_ACCESS }
     # if you wanted to force EVERY URL to be protected
-    - { path: ^/, roles: ROLE_USER }
-  #  - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-  #   - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-  #   - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-  # - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/bead, roles: ROLE_USER }
+    #  - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    #   - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    #   - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    # - { path: ^/userbead, roles: ROLE_USER }
+    - { path: ^/admin, roles: ROLE_ADMIN }
+
   # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

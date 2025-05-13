@@ -24,6 +24,7 @@ class BeadToMixType extends AbstractType
                 'by_reference' => false, // Important for correct add/remove behavior
                 'required' => false,
                 'attr' => ['class' => 'select2'],
+                'label' => false,
             ]);
         }
     }

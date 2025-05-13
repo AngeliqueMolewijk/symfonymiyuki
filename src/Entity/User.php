@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -41,6 +43,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?\DateTime $agreedTermsAt = null;
+
+    /**
+     * @var Collection<int, UserBead>
+     */
+    #[ORM\OneToMany(targetEntity: UserBead::class, mappedBy: 'user')]
+    private Collection $userBeads;
+
+    /**
+     * @var Collection<int, Project>
+     */
+    #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'user')]
+    private Collection $projects;
+
+    public function __construct()
+    {
+        $this->userBeads = new ArrayCollection();
+        $this->projects = new ArrayCollection();
+    }
+
+
+    // /**
+    //  * @var Collection<int, Bead>
+    //  */
+    // #[ORM\ManyToMany(targetEntity: Bead::class, mappedBy: 'user')]
+    // private Collection $beads;
+
+    // public function __construct()
+    // {
+    //     $this->beads = new ArrayCollection();
+    // }
 
 
     public function getId(): ?int
@@ -145,4 +177,93 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    // /**
+    //  * @return Collection<int, Bead>
+    //  */
+    // public function getBeads(): Collection
+    // {
+    //     return $this->beads;
+    // }
+
+    // public function addBead(Bead $bead): static
+    // {
+    //     if (!$this->beads->contains($bead)) {
+    //         $this->beads->add($bead);
+    //         $bead->addUser($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeBead(Bead $bead): static
+    // {
+    //     if ($this->beads->removeElement($bead)) {
+    //         $bead->removeUser($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    /**
+     * @return Collection<int, UserBead>
+     */
+    public function getUserBeads(): Collection
+    {
+        return $this->userBeads;
+    }
+
+    public function addUserBead(UserBead $userBead): static
+    {
+        if (!$this->userBeads->contains($userBead)) {
+            $this->userBeads->add($userBead);
+            $userBead->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserBead(UserBead $userBead): static
+    {
+        if ($this->userBeads->removeElement($userBead)) {
+            // set the owning side to null (unless already changed)
+            if ($userBead->getUser() === $this) {
+                $userBead->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): static
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects->add($project);
+            $project->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): static
+    {
+        if ($this->projects->removeElement($project)) {
+            // set the owning side to null (unless already changed)
+            if ($project->getUser() === $this) {
+                $project->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }
