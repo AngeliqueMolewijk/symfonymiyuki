@@ -18,6 +18,7 @@
 		</div>
 		<h3>
 			Beads in this color
+
 		</h3>
 		<div class="row row-cols-auto">
 			{% for bead in color.bead %}
@@ -56,49 +57,49 @@
 		</div>
 
 		{# {% if mixes ?? false %}
-																																				
-																																								<div class="mx-auto mb-3" style="width: 400px;">
-																																									<h3>{{mixes|length }}
-																																										Beads in this mix:
-																																									</h3>
-																																								</div>
-																																								<div class="row row-cols-auto">
-																																									{% for mix in mixes %}
-																																										<div class="">
-																																											<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: mix.beadnr }) }}" style="text-decoration:none;">
-																																												<div class="card" style="width: 16rem;">
-																																													<div class="card-header">
-																																														<img src="{{ asset('images/' ~ mix.image)}}" class="card-img-top" alt="...">
-																																														<div class="card-body">
-																																				
-																																															<h5 class="card-title">{{ mix.name }}</h5>
-																																															<ul class="list-group list-group-flush">
-																																																<li class="list-group-item">Number:
-																																																	{{mix.number}}</li>
-																																																<li class="list-group-item">Stock in gram:
-																																																	{{mix.stock / 100}}</li>
-																																				
-																																																<li class="list-group-item">Amount: &#177;
-																																				
-																																																	{{mix.stock * 2}}
-																																																	beads
-																																																</li>
-																																				
-																																																{% if is_granted('ROLE_ADMIN') %}
-																																																	<li class="list-group-item">User:
-																																																		{{puzzel.User.getName }}</li>
-																																																	{% else %}
-																																																{% endif %}
-																																															</ul>
-																																														</div>
-																																													</div>
-																																												</div>
-																																											</a>
+																																						
+																																										<div class="mx-auto mb-3" style="width: 400px;">
+																																											<h3>{{mixes|length }}
+																																												Beads in this mix:
+																																											</h3>
 																																										</div>
-																																									{% endfor %}
-																																								</div>
-																																							</div>
-																																						{% endif %} #}
+																																										<div class="row row-cols-auto">
+																																											{% for mix in mixes %}
+																																												<div class="">
+																																													<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: mix.beadnr }) }}" style="text-decoration:none;">
+																																														<div class="card" style="width: 16rem;">
+																																															<div class="card-header">
+																																																<img src="{{ asset('images/' ~ mix.image)}}" class="card-img-top" alt="...">
+																																																<div class="card-body">
+																																						
+																																																	<h5 class="card-title">{{ mix.name }}</h5>
+																																																	<ul class="list-group list-group-flush">
+																																																		<li class="list-group-item">Number:
+																																																			{{mix.number}}</li>
+																																																		<li class="list-group-item">Stock in gram:
+																																																			{{mix.stock / 100}}</li>
+																																						
+																																																		<li class="list-group-item">Amount: &#177;
+																																						
+																																																			{{mix.stock * 2}}
+																																																			beads
+																																																		</li>
+																																						
+																																																		{% if is_granted('ROLE_ADMIN') %}
+																																																			<li class="list-group-item">User:
+																																																				{{puzzel.User.getName }}</li>
+																																																			{% else %}
+																																																		{% endif %}
+																																																	</ul>
+																																																</div>
+																																															</div>
+																																														</div>
+																																													</a>
+																																												</div>
+																																											{% endfor %}
+																																										</div>
+																																									</div>
+																																								{% endif %} #}
 
 	</section>
 {% endblock %}
