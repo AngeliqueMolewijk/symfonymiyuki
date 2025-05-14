@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Bead
+{% endblock %}
+
+{% block body %}
+	<h1>Edit Bead</h1>
+
+	{# {{ include('bead/_form.html.twig', {'title': 'Edit'}) }} #}
+	{# {% if bead|default(null) %} #}
+	{{bead.bead.name}}
+	<div class="container">
+		<div><img src="{{ asset('images/' ~ bead.bead.image) }}" class="img-fluid p-3"/></div>
+		{{bead.bead.name}}
+	</div>
+	{{bead.bead.number}}
+
+	{# {% endif %} #}
+	{{ form_start(beadForm) }}
+	{{ form_row(beadForm.stock) }}{# {{ form_row(beadForm.number) }} — omitted on purpose #}
+
+	{# {{ form_row(beadForm._token) }} #}
+		<button class="btn btn-primary"> Save</button>
+	{# {{ form_row(beadForm.submit, { 'label': 'Submit me' }) }} #}
+	{{form_end(beadForm)}}
+	<a href="{{ path('app_bead_homepage') }}" class="btn btn-primary btn-sm">
+		back to my beads</a>
+
+
+{% endblock %}

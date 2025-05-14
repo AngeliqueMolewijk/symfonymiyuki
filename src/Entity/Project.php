@@ -36,6 +36,14 @@ class Project
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[ORM\ManyToOne(inversedBy: 'projects')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?user $user = null;
+
+
+    private array $newCategories = [];
+
+
     public function __construct()
     {
         $this->bead = new ArrayCollection();
@@ -129,5 +137,27 @@ class Project
         $this->image = $image;
 
         return $this;
+    }
+
+    public function getUser(): ?user
+    {
+        return $this->user;
+    }
+
+    public function setUser(?user $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getNewCategories(): array
+    {
+        return $this->newCategories;
+    }
+
+    public function setNewCategories(array $newCategories): void
+    {
+        $this->newCategories = $newCategories;
     }
 }

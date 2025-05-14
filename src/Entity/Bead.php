@@ -2,18 +2,21 @@
 
 namespace App\Entity;
 
-use App\Repository\BeadsRepository;
+use App\Repository\BeadRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation\Timestampable;
+use Gedmo\Mapping\Annotation as Gedmo;
 
-#[ORM\Entity(repositoryClass: BeadsRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
+#[ORM\Entity(repositoryClass: BeadRepository::class)]
 class Bead
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
@@ -23,27 +26,28 @@ class Bead
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $stock = null;
-
-    #[ORM\Column(nullable: true)]
     private ?string $image = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $userid = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Timestampable(on: 'create')]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt = null;
+
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $deletedAt = null;
+
 
     /**
      * @var Collection<int, Color>
      */
     #[ORM\ManyToMany(targetEntity: Color::class, mappedBy: 'bead')]
     private Collection $colors;
+
 
     // Mixed bead components (self-referencing ManyToMany)
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'usedInMixes')]
@@ -61,12 +65,20 @@ class Bead
     #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'bead')]
     private Collection $projects;
 
+    /**
+     * @var Collection<int, UserBead>
+     */
+    #[ORM\OneToMany(targetEntity: UserBead::class, mappedBy: 'bead')]
+    private Collection $userBeads;
+
+
     public function __construct()
     {
         $this->colors = new ArrayCollection();
         $this->components = new ArrayCollection();
         $this->usedInMixes = new ArrayCollection();
         $this->projects = new ArrayCollection();
+        $this->userBeads = new ArrayCollection();
     }
 
     public function __toString()
@@ -103,17 +115,6 @@ class Bead
         return $this;
     }
 
-    public function getStock(): ?int
-    {
-        return $this->stock;
-    }
-
-    public function setStock(?int $stock): static
-    {
-        $this->stock = $stock;
-
-        return $this;
-    }
 
     public function getImage(): ?string
     {
@@ -123,18 +124,6 @@ class Bead
     public function setImage(?string $image): static
     {
         $this->image = $image;
-
-        return $this;
-    }
-
-    public function getUserid(): ?int
-    {
-        return $this->userid;
-    }
-
-    public function setUserid(?int $userid): static
-    {
-        $this->userid = $userid;
 
         return $this;
     }
@@ -197,24 +186,11 @@ class Bead
 
     public function addComponent(self $bead): self
     {
-        // dd("in addcomponents");
         if (!$this->components->contains($bead)) {
-            // dd($this->components);
             $this->components->add($bead);
             $bead->usedInMixes[] = $this;
-            // dd($bead->usedInMixes);
         }
 
-        return $this;
-    }
-
-    public function setComponents(iterable $components): self
-    {
-
-        $this->components = new ArrayCollection();
-        foreach ($components as $component) {
-            $this->addComponent($component);
-        }
         return $this;
     }
 
@@ -253,6 +229,47 @@ class Bead
     {
         if ($this->projects->removeElement($project)) {
             $project->removeBead($this);
+        }
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserBead>
+     */
+    public function getUserBeads(): Collection
+    {
+        return $this->userBeads;
+    }
+
+    public function addUserBead(UserBead $userBead): static
+    {
+        if (!$this->userBeads->contains($userBead)) {
+            $this->userBeads->add($userBead);
+            $userBead->setBead($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserBead(UserBead $userBead): static
+    {
+        if ($this->userBeads->removeElement($userBead)) {
+            // set the owning side to null (unless already changed)
+            if ($userBead->getBead() === $this) {
+                $userBead->setBead(null);
+            }
         }
 
         return $this;
