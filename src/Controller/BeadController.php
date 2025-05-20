@@ -38,12 +38,11 @@ final class BeadController extends AbstractController
     public function new(Request $request, EntityManagerInterface $em, ImageUploaderService $imageUploader, UserInterface $user): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        // $user = $this->getUser();
         $bead = new Bead();
         $userBead = new UserBead();
         $userBead->setUser($user);
-        $userBead->setBead($bead); // link it to the new Bead
-        $userBead->setStock(0); // default stock value
+        $userBead->setBead($bead);
+        $userBead->setStock(0);
 
         $beadForm = $this->createForm(BeadType::class, $bead, [
             'user_bead' => $userBead,
@@ -152,7 +151,6 @@ final class BeadController extends AbstractController
 
     private function renderBeadList(string $template, Request $request, BeadRepository $beadRepository, UserInterface $user): Response
     {
-        // $user = $this->getUser();
         $query = $request->query->get('q');
 
         $beads = $beadRepository->findSearchBeads($query, $user);

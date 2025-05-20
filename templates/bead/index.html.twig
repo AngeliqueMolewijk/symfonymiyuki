@@ -2,7 +2,6 @@
 
 {% block title %}All Bead list
 
-
 {% endblock %}
 
 {% block body %}
@@ -51,8 +50,6 @@
 				<td>
 					{% for userBead in bead.userBeads %}
 						{% if userBead.user == app.user %}
-							{# {% set userFound = true %} #}
-
 							<div class="d-flex justify-content-between border-bottom">
 								<span>Stock:</span>
 								<span>{{userBead.stock /100}}
@@ -65,8 +62,6 @@
 						{% endif %}
 					{% endfor %}
 				</td>
-
-
 				<td>
 					<a href="{{ path('app_bead_show', {'id': bead.id}) }}">show</a>
 					<a href="{{ path('app_bead_edit', {'id': bead.id}) }}">edit</a>
