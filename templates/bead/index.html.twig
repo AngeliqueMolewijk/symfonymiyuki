@@ -59,6 +59,14 @@
 								<span>Amount</span>
 								<span>{{userBead.stock * 2}}</span>
 							</div>
+{% if userBead.controlled != null %}
+	<div class="d-flex justify-content-between border-bottom">
+		<span>stock changed</span>
+		<span>{{userBead.controlled|date("d/M/Y") }}</span>
+	</div>
+{% endif %}
+
+
 						{% endif %}
 					{% endfor %}
 				</td>

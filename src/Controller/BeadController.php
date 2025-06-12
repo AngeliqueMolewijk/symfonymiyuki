@@ -119,14 +119,14 @@ final class BeadController extends AbstractController
             'bead' => $bead,
         ]);
 
-
+        $originalStock = $userBead?->getStock();
         $beadForm = $this->createForm(BeadType::class, $bead, [
             'user_bead' => $userBead,
             'show_stock' => $userBead !== null,
 
 
         ]);
-
+        // dd($originalStock);
         $beadForm->handleRequest($request);
         if ($beadForm->isSubmitted() && $beadForm->isValid()) {
             $uploadedFile = $beadForm['imageFile']->getData();
@@ -137,7 +137,12 @@ final class BeadController extends AbstractController
             if ($userBead !== null) {
                 $userBeadData = $beadForm->get('userBead')->getData();
                 $userBead->setStock($userBeadData->getStock());
+                if ($userBeadData->getStock() !== $originalStock) {
+                    $userBead->setControlledAt();
+                }
+                // $userBead->updateTimestamp();
             }
+
             $em->flush();
             return $this->redirectToRoute('app_bead_show', ['id' => $bead->getId()]);
         }
