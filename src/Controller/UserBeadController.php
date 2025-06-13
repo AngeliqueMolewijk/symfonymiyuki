@@ -24,32 +24,52 @@ final class UserBeadController extends AbstractController
 
     #[Route('/{id}/remove', name: 'remove')]
 
-    public function remove($id, EntityManagerInterface $em, UserBeadRepository $userBeadRepository): Response
+    public function remove(Bead $bead, EntityManagerInterface $em, UserBeadRepository $userBeadRepository): Response
     {
         $user = $this->getUser();
-
+        $relatedBeads = $bead->getComponents();
+        $id = $bead->getId();
         $userBead = $em->getRepository(UserBead::class)->findOneBy([
             'user' => $user,
-            'bead' => $id,
+            'bead' => $bead,
         ]);
+
         if ($userBead) {
             $em->remove($userBead);
             $em->flush();
         }
+        foreach ($relatedBeads as $component) {
+            $userBead = $em->getRepository(UserBead::class)->findOneBy([
+                'user' => $user,
+                'bead' => $component,
+            ]);
+            if ($userBead->getStock() > 0) {
+                # code...
+            } else {
+                $em->remove($userBead);
+                $em->flush();
+            }
+            // dd($component);
+            // dd($userBead);
+            // $bead->addComponent($component);
+
+
+        }
+
         return $this->redirect($this->generateUrl('app_bead_homepage'));
     }
 
     #[Route('/{id}/add', name: 'add')]
     public function add(Bead $bead, EntityManagerInterface $em, UserInterface $user)
     {
-        $user =
-            $id = $bead->getId();
-
+        // $user =
+        $id = $bead->getId();
         // Try to find an existing product by name
         $alreadyproduct = $em->getRepository(UserBead::class)->findOneBy([
             'user' => $user,
             'bead' => $id,
         ]);
+        $relatedBeads = $bead->getComponents();
 
         if (!$alreadyproduct) {
 
@@ -60,13 +80,64 @@ final class UserBeadController extends AbstractController
             $em->persist($userBead);
             $em->flush();
         }
+        foreach ($relatedBeads as $component) {
+
+            // $bead->addComponent($component);
+            $id = $component->getId();
+            // dd($id);
+            $alreadyproduct = $em->getRepository(UserBead::class)->findOneBy([
+                'user' => $user,
+                'bead' => $id,
+            ]);
+            if (!$alreadyproduct) {
+
+                $userBead = new UserBead();
+                $userBead->setUser($user);
+                $userBead->setBead($component);
+
+                $em->persist($userBead);
+                $em->flush();
+            }
+        }
+
         if ($this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_bead_edit', ['id' => $bead->getId()]);
+            return $this->redirectToRoute('app_bead_show', ['id' => $bead->getId()]);
         } else {
             return $this->redirectToRoute('app_bead_show', ['id' => $bead->getId()]);
         }
     }
 
+    #[Route('/{id}/addComponents', name: 'addComponents')]
+    public function addComponents(Bead $bead, EntityManagerInterface $em, UserInterface $user)
+    {
+        $id = $bead->getId();
+
+
+        $relatedBeads = $bead->getComponents();
+        // dd($relatedBeads);
+        // Try to find an existing product by name
+        $alreadyproduct = $em->getRepository(UserBead::class)->findOneBy([
+            'user' => $user,
+            'bead' => $id,
+        ]);
+
+        foreach ($relatedBeads as $component) {
+
+            $bead->addComponent($component);
+
+            if (!$alreadyproduct) {
+
+                $userBead = new UserBead();
+                $userBead->setUser($user);
+                $userBead->setBead($component);
+
+                $em->persist($userBead);
+                $em->flush();
+            }
+        }
+
+        return $this->redirectToRoute('app_bead_showt', ['id' => $bead->getId()]);
+    }
 
 
 

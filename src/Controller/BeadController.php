@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Bead;
 use App\Entity\User;
+use App\Entity\Color;
 use App\Entity\UserBead;
 use App\Form\BeadToMixType;
 use App\Form\BeadType;
@@ -26,6 +27,7 @@ final class BeadController extends AbstractController
     {
         return $this->renderBeadList('bead/homepage.html.twig', $request, $beadRepository, $user);
     }
+
 
     #[Route('/list', name: 'index', methods: ['GET'])]
     public function index(BeadRepository $beadRepository, Request $request, UserInterface $user): Response
@@ -79,7 +81,7 @@ final class BeadController extends AbstractController
 
     // Shows bead details and allows adding it to a mix
 
-    #[Route('/{id}', name: 'show', methods: ['GET', 'POST'])]
+    #[Route('/{id<\d+>}', name: 'show', methods: ['GET', 'POST'])]
     public function show(Bead $bead, Request $request, EntityManagerInterface $em): Response
     {
         $beadToMixForm = $this->createForm(BeadToMixType::class, $bead);
@@ -138,12 +140,13 @@ final class BeadController extends AbstractController
                 $userBeadData = $beadForm->get('userBead')->getData();
                 $userBead->setStock($userBeadData->getStock());
                 if ($userBeadData->getStock() !== $originalStock) {
-                    $userBead->setControlledAt();
+                    $userBead->setControlledAt(new \DateTimeImmutable());
                 }
                 // $userBead->updateTimestamp();
             }
 
             $em->flush();
+
             return $this->redirectToRoute('app_bead_show', ['id' => $bead->getId()]);
         }
 
@@ -153,6 +156,55 @@ final class BeadController extends AbstractController
         ]);
     }
 
+    #[Route('/import-color-bead-links', name: 'import_color_bead_links')]
+    public function importColorBeadLinks(EntityManagerInterface $em): Response
+    {
+        $csvPath = __DIR__ . '/../../public/color_bead.csv';
+
+        if (!file_exists($csvPath) || !is_readable($csvPath)) {
+            return new Response('CSV file not found or unreadable.', 400);
+        }
+
+        if (($handle = fopen($csvPath, 'r')) === false) {
+            return new Response('Could not open CSV.', 500);
+        }
+
+        $repoBead = $em->getRepository(Bead::class);
+        $repoColor = $em->getRepository(Color::class);
+
+        fgetcsv($handle); // Skip header
+
+        while (($row = fgetcsv($handle)) !== false) {
+            $colorId = (int) ($row[0] ?? 0);
+            $beadId = (int) ($row[1] ?? 0);
+            if (!$colorId || !$beadId) {
+                continue;
+            }
+
+            $color = $repoColor->find($colorId);
+            $bead = $repoBead->find($beadId);
+
+            if (!$bead) {
+                dump("Missing Bead ID: $beadId");
+                continue;
+            }
+            if (!$color) {
+                dump("Missing Color ID: $colorId");
+                continue;
+            }
+
+            // Add color to bead if not already present
+            if (!$bead->getColors()->contains($color)) {
+                $bead->addColor($color);
+                $em->persist($bead);
+            }
+        }
+
+        fclose($handle);
+        $em->flush();
+
+        return new Response('Color-bead links imported.');
+    }
 
     private function renderBeadList(string $template, Request $request, BeadRepository $beadRepository, UserInterface $user): Response
     {

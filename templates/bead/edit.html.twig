@@ -5,7 +5,9 @@
 
 {% block body %}
 	{% if is_granted('ROLE_ADMIN') %}
-		<h1>>Edit Bead</h1>
+<h1>Edit Bead</h1>
+
+
 	{% else %}
 		<h1>Edit Stock</h1>
 	{% endif %}
@@ -63,7 +65,8 @@
 		</div>
 	{% endfor %}
 	<script>
-		document.addEventListener('DOMContentLoaded', function () { 
+document.addEventListener('DOMContentLoaded', function () {
+
 $('.select2').select2({placeholder: "Choose an option", allowClear: true});
 
 });

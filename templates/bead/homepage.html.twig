@@ -33,10 +33,12 @@
 								<img src="{{ asset('images/' ~ bead.image)}}" class="card-img-top" alt="...">
 								<div class="card-body">
 
-									<h5 class="card-title" style="height:50px">{{ bead.name }}</h5>
+									<h5 class="card-title" style="height:80px">{{ bead.name }}</h5>
 									<ul class="list-group list-group-flush">
-										<li class="list-group-item">Number:
+										<li class="list-group-item">
+											Number:
 											{{bead.number}}</li>
+
 										<li class="list-group-item" style="height:33px">
 											{% if bead.components | length > 0 %}
 												Beads in mix:
@@ -59,30 +61,32 @@
 												{% endif %}
 											{% endfor %}
 										</li>
-										<li class="list-group-item" style="height:33px"></li>
+										<li class="list-group-item" style="height:33px">
 
 
-										{% set userFound = false %}
-										{% for userBead in bead.userBeads %}
-											{% if userBead.user == app.user %}
-												{% set userFound = true %}
+											{% set userFound = false %}
+											{% for userBead in bead.userBeads %}
+												{% if userBead.user == app.user %}
+													{% set userFound = true %}
+												{% endif %}
+											{% endfor %}
+
+
+											{% if userFound %}
+												<p class='text-success'>In collection</p>
+											{% else %}
+												<p class='text-danger'>Not in collection</p>
 											{% endif %}
-										{% endfor %}
-
-
-										{% if userFound %}
-											<p class='text-success'>In collection</p>
-										{% else %}
-											<p class='text-danger'>Not in collection</p>
-										{% endif %}
-									</li>
-								</ul>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
-					</div>
-				</a>
-			</div>
-		{% endfor %}
-	</div>
+					</a>
+				</div>
+			{% endfor %}
+		</div>
 
-</div></main>{% endblock %}
+
+	</div>
+</main>{% endblock %}

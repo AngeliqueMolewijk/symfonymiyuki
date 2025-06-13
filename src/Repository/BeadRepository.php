@@ -32,6 +32,7 @@ class BeadRepository extends ServiceEntityRepository
                 ->andWhere('ub.user = :user')
                 ->setParameter('user', $user);
         }
+
         return $queryBuilder
             ->orderBy('b.updatedAt', 'DESC')
             ->getQuery()

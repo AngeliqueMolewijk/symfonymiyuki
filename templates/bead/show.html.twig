@@ -80,12 +80,21 @@
 							<div class="mt-2">
 								<a href="{{ path('app_userbead_remove', {'id': bead.id}) }}" class="btn btn-danger">remove from collection</a>
 							</div>
+							{# <div class="mt-2">
+																																																		<a href="{{ path('app_userbead_addComponents', {'id': bead.id}) }}" class="btn btn-success">Add components to my collection</a>
+																																																	</div> #}
+
 
 						{% else %}
 							<p class='text-danger fw-bold'>Not in my collection</p>
 							<div class="mt-2">
 								<a href="{{ path('app_userbead_add', {'id': bead.id}) }}" class="btn btn-success">Add to my collection</a>
 							</div>
+							{# <div class="mt-2">
+																																																		<a href="{{ path('app_userbead_addComponents', {'id': bead.id}) }}" class="btn btn-success">Add components to my collection</a>
+																																																	</div> #}
+
+
 						{% endif %}
 						<div class="my-2 d-flex gap-2">
 							{% if is_granted('ROLE_ADMIN') %}
@@ -140,13 +149,13 @@
 													{% if userFound %}
 														<p class='text-success fw-bold'>In my collection</p>
 														{# <div class="mt-2">
-																																																																																																																																																																																																																																																																																																							<a href="{{ path('app_userbead_remove', {'id': bead.id}) }}" class="btn btn-danger">remove from collection</a>
-																																																																																																																																																																																																																																																																																																						</div> #}
+																																																																						<a href="{{ path('app_userbead_remove', {'id': bead.id}) }}" class="btn btn-danger">remove from collection</a></div>#}
+
+
 													{% else %}
 														<p class='text-danger fw-bold'>Not in my collection</p>
 														{# <div class="mt-2">
-																																																																																																																																																																																																																																																																																																							<a href="{{ path('app_userbead_add', {'id': bead.id}) }}" class="btn btn-success">Add to my collection</a>
-																																																																																																																																																																																																																																																																																																						</div> #}
+																																																																						<a href="{{ path('app_userbead_add', {'id': bead.id}) }}" class="btn btn-success">Add to my collection</a></div>#}
 
 
 													{% endif %}
@@ -180,85 +189,104 @@
 											<ul class="list-group list-group-flush">
 												<li class="list-group-item">Number:
 													{{mix.number}}</li>
-												<li class="list-group-item">in Collection:
+												<li class="list-group-item">
 													{% set userFound = false %}
 													{% for userBead in mix.userBeads %}
 														{# {{userBead.name}} #}
 
 														{% if userBead.user == app.user %}
 															{% set userFound = true %}
+															<p>
+																{{userBead.stock }}
+																gram
+															</p>
+
 														{% endif %}
 													{% endfor %}
 
 													{% if userFound %}
 														<p class='text-success fw-bold'>In my collection</p>
+
 														{# <div class="mt-2">
-																																																																																																																																																																																																																																																																																																							<a href="{{ path('app_userbead_remove', {'id': bead.id}) }}" class="btn btn-danger">remove from collection</a>
-																																																																																																																																																																																																																																																																																																						</div> #}
+																																																																						<a href="{{ path('app_userbead_remove', {'id': bead.id}) }}" class="btn btn-danger">remove from collection</a></div>#}
+
 													{% else %}
 														<p class='text-danger fw-bold'>Not in my collection</p>
 														{# <div class="mt-2">
-																																																																																																																																																																																																																																																																																																							<a href="{{ path('app_userbead_add', {'id': bead.id}) }}" class="btn btn-success">Add to my collection</a>
-																																																																																																																																																																																																																																																																																																						</div> #}
+																																																																						<a href="{{ path('app_userbead_add', {'id': bead.id}) }}" class="btn btn-success">Add to my collection</a></div>#}
 
 
 													{% endif %}
 												</li>
 
-											</ul>
-										</div>
+
+											</li>
+
+
+										</ul>
 									</div>
 								</div>
-							</a>
-						</div>
-					{% endfor %}
-				</div>
-			{% endif %}
-			{% if bead.getProjects|length > 0 %}
+							</div>
+						</a>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+		{% if bead.getProjects|length > 0 %}
 
-				<div class="mx-auto mt-3" style="width: 400px;">
-					<h3>This beads in
-						{{bead.getProjects|length }}
-						project(s)
 
-					</h3>
-				</div>
-				<div class="row">
-					{% for projects in bead.getProjects %}
-						<div class="col-auto">
+			<div class="mx-auto mt-3" style="width: 400px;">
+				<h3>This beads in
+					{{bead.getProjects|length }}
+					project(s)
 
-							<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: projects.id }) }}" style="text-decoration:none;">
 
-								<div class="card" style="width: 16rem;">
-									<div class="card-header">
-										<img src="{{ asset('images/' ~ projects.image)}}" class="card-img-top" alt="...">
+				</h3>
+			</div>
+			<div class="row">
+				{% for projects in bead.getProjects %}
+					<div class="col-auto">
 
-										<div class="card-body">
 
-											<h5 class="card-title">{{ projects.name }}</h5>
+						<a class="hover:text-slate-200" href="{{ path('app_bead_show', { id: projects.id }) }}" style="text-decoration:none;">
 
-											<ul class="list-group list-group-flush">
-												<li class="list-group-item">Number:
-													{{projects.description}}</li>
 
-											</ul>
-										</div>
+							<div class="card" style="width: 16rem;">
+								<div class="card-header">
+									<img src="{{ asset('images/' ~ projects.image)}}" class="card-img-top" alt="...">
+
+
+									<div class="card-body">
+
+
+										<h5 class="card-title">{{ projects.name }}</h5>
+
+
+										<ul class="list-group list-group-flush">
+											<li class="list-group-item">Number:
+												{{projects.description}}</li>
+
+
+										</ul>
 									</div>
 								</div>
-							</a>
-						</div>
-					{% endfor %}
-				</div>
-			{% endif %}
-			<!-- JavaScript to handle the confirmation for the delete button -->
+							</div>
+						</a>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+		<!-- JavaScript to handle the confirmation for the delete button -->
 
-			<script>
-				document.addEventListener('DOMContentLoaded', function () { // Initialize Select2 if you need it for other elements on
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function () { // Initialize Select2 if you need it for other elements on
+
 $('.select2').select2({placeholder: "Choose an option", allowClear: true});
 
 });
-			</script>
+		</script>
 
 
-		</section>
-	{% endblock %}
+	</section>
+{% endblock %}
